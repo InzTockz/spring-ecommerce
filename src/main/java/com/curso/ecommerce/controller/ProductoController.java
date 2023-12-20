@@ -15,6 +15,8 @@ import com.curso.ecommerce.model.Producto;
 import com.curso.ecommerce.model.Usuario;
 import com.curso.ecommerce.service.ProductoService;
 
+import jakarta.websocket.Decoder.Text;
+
 
 @Controller
 @RequestMapping("/productos")
@@ -60,6 +62,12 @@ public class ProductoController {
 	@PostMapping("/update")
 	public String udpdate(Producto producto) {
 		productoservice.update(producto);
+		return "redirect:/productos";
+	}
+	
+	@GetMapping("/delete/{id}")
+	public String delete(@PathVariable int id) {
+		productoservice.delete(id);
 		return "redirect:/productos";
 	}
 }
