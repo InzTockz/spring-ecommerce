@@ -3,6 +3,7 @@ package com.curso.ecommerce.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,13 @@ public class HomeController {
 		detalleOrden.setTotal(producto.getPrecio()*cantidad);
 		detalleOrden.setProducto(producto);
 		
-		detalles.add(detalleOrden);
+		//validar que el producto no se añada 2 veces
+		int idProducto = producto.getId();
+		boolean ingresado = detalles.stream().anyMatch(p -> p.getProducto().getId()==id);
+		
+		if(!ingresado) {
+			detalles.add(detalleOrden);
+		}
 		
 		sumaTotal = detalles.stream().mapToDouble(dt->dt.getTotal()).sum();
 		
@@ -106,6 +113,14 @@ public class HomeController {
 		model.addAttribute("orden", orden);
 		
 		return "usuario/carrito";
+	}
+	
+	@GetMapping("/getCart")
+	public String getCart(Model model) {
+		
+		model.addAttribute("cart", detalles);
+		model.addAttribute("orden", orden);
+		return "/usuario/carrito";
 	}
 	
 }
