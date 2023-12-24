@@ -1,9 +1,9 @@
 package com.curso.ecommerce.controller;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,6 +121,11 @@ public class HomeController {
 		model.addAttribute("cart", detalles);
 		model.addAttribute("orden", orden);
 		return "/usuario/carrito";
+	}
+	
+	@GetMapping("/order")
+	public String order() {
+		return "usuario/resumenorden";
 	}
 	
 }
