@@ -30,36 +30,43 @@
 
 		<!-- Page Heading/Breadcrumbs -->
 		<h1 class="mt-4 mb-3">
-			Spring eCommerce <small>Productos</small>
+			Spring eCommerce <small>Ordenes</small>
 		</h1>
 
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a th:href="@{/}">Home</a></li>
-			<li class="breadcrumb-item active">Ver Usuarios</li>
+			<li class="breadcrumb-item active">Compras</li>
 		</ol>
-		<h2>Usuarios</h2>
-		<table class="table">
-			<thead>
-				<tr>
-					<th scope="col">Nombre</th>
-					<th scope="col">Email</th>
-					<th scope="col">Dirección</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="usuario:${usuarios}">
-					<td th:text="${usuario.nombre}"></td>
-					<td th:text="${usuario.email}"></td>
-					<td th:text="${usuario.direccion}"></td>
-				</tr>
-			</tbody>
-		</table>
 
+		<!-- Blog Post -->
+		<div class="card mb-4">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-lg-12">
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">No. de Orden</th>
+									<th scope="col">Fecha</th>
+									<th scope="col">Valor</th>
+									<th scope="col">Acción</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="orden:${ordenes}">
+									<td th:text="${orden.id}">4555454</td>
+									<td th:text="${orden.fechaCreacion}">Fecha de Compra</td>
+									<td th:text="${orden.total}">Total</td>
+									<td><a href="detallecompra.html" class="btn btn-success">Ver Detalle</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-
 	<!-- /.container -->
-
-	</div>
 	<!-- /.container -->
 	<div th:insert="~{administrador/template_admin.html::footer}">
 
