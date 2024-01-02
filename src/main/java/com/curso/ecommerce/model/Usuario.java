@@ -1,11 +1,16 @@
 package com.curso.ecommerce.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -29,11 +34,14 @@ public class Usuario {
 	@OneToMany(mappedBy = "usuario")
 	private List<Orden> ordenes;
 	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<Roles> roles = new HashSet<>();
+	
 	public Usuario() {
 	}
 
-	public Usuario(int id, String nombre, String username, String email, String direccion, String tipo,
-			String password) {
+	public Usuario(int id, String nombre, String username, String email, String direccion, String tipo, String password,
+			List<Producto> productos, List<Orden> ordenes, Set<Roles> roles) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -42,6 +50,9 @@ public class Usuario {
 		this.direccion = direccion;
 		this.tipo = tipo;
 		this.password = password;
+		this.productos = productos;
+		this.ordenes = ordenes;
+		this.roles = roles;
 	}
 
 	public int getId() {
@@ -106,6 +117,22 @@ public class Usuario {
 
 	public void setProductos(List<Producto> productos) {
 		this.productos = productos;
+	}
+
+	public List<Orden> getOrdenes() {
+		return ordenes;
+	}
+
+	public void setOrdenes(List<Orden> ordenes) {
+		this.ordenes = ordenes;
+	}
+
+	public Set<Roles> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Roles> roles) {
+		this.roles = roles;
 	}
 
 	@Override

@@ -6,15 +6,19 @@ import java.util.Optional;
 import org.slf4j.*;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.curso.ecommerce.model.Orden;
+import com.curso.ecommerce.model.Roles;
 import com.curso.ecommerce.model.Usuario;
+import com.curso.ecommerce.repository.IRolesRepository;
 import com.curso.ecommerce.service.IOrdenService;
 import com.curso.ecommerce.service.IUsuarioServices;
 
@@ -32,6 +36,11 @@ public class UsuarioController {
 	@Autowired
 	private IOrdenService ordenService;
 	
+	@Autowired
+	private IRolesRepository rolesRepository;
+	
+	BCryptPasswordEncoder passEcndoe = new BCryptPasswordEncoder();
+	
 	// /usuario/registro
 	@GetMapping("/registro")
 	public String create() {
@@ -41,8 +50,11 @@ public class UsuarioController {
 	@PostMapping("/save")
 	public String save(Usuario usuario) {
 		
+		Optional<Roles> roles = rolesRepository.findById(2);
+		
 		logger.info("Usuario registro: {}", usuario);
-		usuario.setTipo("USER");
+		usuario.getRoles().add(roles.get());
+		usuario.setPassword(passEcndoe.encode(usuario.getPassword()));
 		usuarioService.save(usuario);
 		return "redirect:/";
 	}
@@ -52,16 +64,19 @@ public class UsuarioController {
 		return "usuario/login";
 	}
 	
-	@PostMapping("/acceder")
+	@GetMapping("/acceder")
 	public String acceder(Usuario usuario, HttpSession session) {
 		logger.info("Accesos: {}", usuario);
 		
-		Optional<Usuario> user = usuarioService.findByEmail(usuario.getEmail());
+		Usuario user = usuarioService.findByEmail(usuario.getEmail());
+		//Optional<Roles> roles = rolesRepository.findById(1);
 		//logger.info("Usuario de db: {}", user.get());
 		
-		if(user.isPresent()) {
-			session.setAttribute("idusuario", user.get().getId());
-			if(user.get().getTipo().equals("ADMIN")) {
+		if(user!=null) {
+			session.setAttribute("idusuario", user.getId());
+			
+			boolean codrol = user.getRoles().stream().anyMatch(rol -> rol.getIdrol() == 1);
+			if(user.getRoles().stream().anyMatch(rol -> rol.getIdrol() == 1)) {
 				return "redirect:/administrador";
 			}
 			else {
